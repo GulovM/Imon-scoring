@@ -3,36 +3,42 @@ import pickle
 import pandas as pd
 import streamlit as st
 
-
 st.subheader('Imon International Bank Scoring')
 
-model_selected = st.radio('What analysis do you want to use', ('LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier(without options)',  'RandomForestClassifier(with options)', 'Default'))
+model_selected = st.radio('What analysis do you want to use', ('LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier(without options)', 'RandomForestClassifier(with options)', 'Default'))
 
+def load_model(model_name):
+    try:
+        if model_name == 'DecisionTreeClassifier':
+            with open("ModelTree.pkl", "rb") as pickle_in:
+                return pickle.load(pickle_in)
+        elif model_name in ['LogisticRegression', 'Default']:
+            with open("LogReg.pkl", "rb") as pickle_in:
+                return pickle.load(pickle_in)
+        elif model_name == 'RandomForestClassifier(with options)':
+            with open("Forest(par).pkl", "rb") as pickle_in:
+                return pickle.load(pickle_in)
+        elif model_name == 'RandomForestClassifier(without options)':
+            with open("Forest.pkl", "rb") as pickle_in:
+                return pickle.load(pickle_in)
+    except FileNotFoundError:
+        st.error("Model file not found")
+        return None
 
+def predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier):
+    try:
+        prediction = classifier.predict(np.array([[gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business]]))
+        return prediction
+    except Exception as e:
+        st.error(f"Prediction error: {str(e)}")
+        return None
 
-if model_selected == 'DecisionTreeClassifier':
-    pickle_in = open("ModelTree.pkl","rb")
-    classifier=pickle.load(pickle_in)
-elif model_selected in ['LogisticRegression', 'Default']:
-    pickle_in = open("LogReg.pkl","rb")
-    classifier=pickle.load(pickle_in)
-elif model_selected == 'RandomForestClassifier(with options)':
-    pickle_in = open("Forest(par).pkl","rb")
-    classifier=pickle.load(pickle_in)
-elif model_selected == 'RandomForestClassifier(without options)':
-    pickle_in = open("Forest.pkl","rb")
-    classifier=pickle.load(pickle_in)
-
-                     
-                     
-def predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business):
-    prediction=classifier.predict([[gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business]])
-    print(prediction)
-    return prediction
-                     
-                     
 def main():
     st.title("Imon International's Bank scoring system")
+    classifier = load_model(model_selected)
+    if classifier is None:
+        return
+    
     gender = st.radio('Ваш пол?(0 - male, 1 - female)', (0, 1))
     Issue_amount_nominal = st.number_input('Какова сумма выдочи номинала(используйте только цифры)?', step=1, value=0)
     Term = st.number_input('На какой срок вы хотите кредит?(используйте только цифры)?', step=1, value=0) 
@@ -42,16 +48,15 @@ def main():
     education = st.radio('Какое у вас образование?(0 - Высшее образование, 1 - Сред.спец.образ-ние, 2 - Среднее образование, 3 - Непол Сред.образ, 4 - Начал образование, 5 - Аспирантура)', (0, 1, 2, 3, 4, 5))
     Tupe_of_business = st.radio('Какой у вас вид бизнеса?(0 - 1. Карзи истеъмоли/Потребительский кредит, 1 - 2. Истехсолот/Производство, 2 - 6. Хочагии кишлок / Сельское хозяйство, 3 - 3. Хизматрасони/Услуги, 4 - 4. Савдо / Торговля)', (0, 1, 2, 3, 4)) 
                      
-    result=""
+   result = ""
     if st.button("Predict"):
-        result=int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)) 
-     #st.success('The output is {}'.format(result))
-    st.success('Scoring system result is(1 - Длительность самой долгой единовременной просрочки в течение цикла > 20, 0 - Scoring system result is(1 - Длительность самой долгой единовременной просрочки в течение цикла <= 20) {}'.format(result))
-                     
+        prediction = predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier)
+        if prediction is not None:
+            result = int(prediction[0])
     
-              
-                  
-if __name__=='__main__':
+    st.success(f'Scoring system result is {result}')
+
+if __name__ == '__main__':
     main()
 
    
