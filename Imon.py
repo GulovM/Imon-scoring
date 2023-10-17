@@ -23,7 +23,7 @@ elif model_selected == 'RandomForestClassifier(without options)':
 
                      
                      
-def predict_note_authentication((gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)):
+def predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business):
     prediction=classifier.predict([[(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)]])
     print(prediction)
     return prediction
