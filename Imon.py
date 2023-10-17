@@ -3,21 +3,20 @@ import pickle
 
 st.subheader('Imon International Bank Scoring')
 
-# Загрузите модели машинного обучения из файлов .pkl
-model_files = {
-    "DecisionTreeClassifier":"ModelTree.pkl",
-    "RandomForestClassifier":"Forest.pkl",
-    "RandomForestClassifier(par)":"Forest(par).pkl",
-    "LogisticRegression": "LogReg.pkl"
-}
+model_selected = st.radio('What analysis do you want to use', ('LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier(without options)',  'RandomForestClassifier(with options)', 'Default'))
 
-model_selected = st.selectbox('Выберите модель', list(model_files.keys()))
-
-loaded_model = None
-
-if model_selected in model_files:
-    with open(model_selected, "rb") as pickle_in:
-        loaded_model = pickle.load(pickle_in)
+if model_selected == 'DecisionTreeClassifier':
+    pickle_in = open("ModelTree.pkl","rb")
+    classifier=pickle.load(pickle_in)
+elif model_selected in ['LogisticRegression', 'Default']:
+    pickle_in = open("LogReg.pkl","rb")
+    classifier=pickle.load(pickle_in)
+elif model_selected == 'RandomForestClassifier(with options)':
+    pickle_in = open("Forest(par).pkl","rb")
+    classifier=pickle.load(pickle_in)
+elif model_selected == 'RandomForestClassifier(without options)':
+    pickle_in = open("Forest.pkl","rb")
+    classifier=pickle.load(pickle_in)
 
 def predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, model):
     prediction = model.predict([[gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business]])[0]
