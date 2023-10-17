@@ -5,10 +5,10 @@ st.subheader('Imon International Bank Scoring')
 
 # Загрузите модели машинного обучения из файлов .pkl
 model_files = {
-    "ModelTree.pkl": "DecisionTreeClassifier",
-    "Forest.pkl": "RandomForestClassifier",
-    "Forest(par).pkl": "RandomForestClassifier(par)",
-    "LogReg.pkl": "LogisticRegression"
+    "DecisionTreeClassifier":"ModelTree.pkl",
+    "RandomForestClassifier":"Forest.pkl",
+    "RandomForestClassifier(par)":"Forest(par).pkl",
+    "LogisticRegression": "LogReg.pkl"
 }
 
 model_selected = st.selectbox('Выберите модель', list(model_files.keys()))
