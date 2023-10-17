@@ -33,11 +33,11 @@ def main():
     education = st.radio('Образование (0 - высшее, 1 - среднее специальное, 2 - среднее, 3 - неполное среднее, 4 - начальное, 5 - аспирантура)', (0, 1, 2, 3, 4, 5))
     Tupe_of_business = st.radio('Вид бизнеса (0 - 1. Потребительский кредит, 1 - 2. Производство, 2 - 6. Сельское хозяйство, 3 - 3. Услуги, 4 - 4. Торговля)', (0, 1, 2, 3, 4)) 
 
-        if st.button("Предсказать"):
-            prediction = predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)
-            st.success(f'Результат скоринговой системы: {prediction}')
-    else:
-        st.warning("Выберите модель для загрузки.")
+if st.button("Предсказать"):
+    prediction = predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)
+st.success(f'Результат скоринговой системы: {prediction}')
+else:
+    st.warning("Выберите модель для загрузки.")
 
 if __name__ == '__main__':
     main()
