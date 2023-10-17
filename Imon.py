@@ -35,7 +35,7 @@ def main():
 
 if st.button("Предсказать"):
     prediction = predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business)
-st.success(f'Результат скоринговой системы: {prediction}')
+    st.success(f'Результат скоринговой системы: {prediction}')
 else:
     st.warning("Выберите модель для загрузки.")
 
