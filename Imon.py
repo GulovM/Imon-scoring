@@ -1,60 +1,45 @@
-import numpy as np
-import pickle
-import pandas as pd
 import streamlit as st
+import pickle
 
 st.subheader('Imon International Bank Scoring')
 
-model_selected = st.radio('What analysis do you want to use', ('LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier(without options)', 'RandomForestClassifier(with options)', 'Default'))
+# Загрузите модели машинного обучения из файлов .pkl
+model_files = {
+    "ModelTree.pkl": "DecisionTreeClassifier",
+    "Forest.pkl": "RandomForestClassifier",
+    "Forest(par).pkl": "RandomForestClassifier(par)",
+    "LogReg.pkl": "LogisticRegression"
+}
 
-def load_model(model_name):
-    try:
-        if model_name == 'DecisionTreeClassifier':
-            with open("ModelTree.pkl", "rb") as pickle_in:
-                return pickle.load(pickle_in)
-        elif model_name in ['LogisticRegression', 'Default']:
-            with open("LogReg.pkl", "rb") as pickle_in:
-                return pickle.load(pickle_in)
-        elif model_name == 'RandomForestClassifier(with options)':
-            with open("Forest(par).pkl", "rb") as pickle_in:
-                return pickle.load(pickle_in)
-        elif model_name == 'RandomForestClassifier(without options)':
-            with open("Forest.pkl", "rb") as pickle_in:
-                return pickle.load(pickle_in)
-    except FileNotFoundError:
-        st.error("Model file not found")
-        return None
+model_selected = st.selectbox('Выберите модель', list(model_files.keys()))
 
-def predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier):
-    try:
-        prediction = classifier.predict(np.array([[gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business]]))
-        return prediction
-    except Exception as e:
-        st.error(f"Prediction error: {str(e)}")
-        return None
+loaded_model = None
+
+if model_selected in model_files:
+    with open(model_selected, "rb") as pickle_in:
+        loaded_model = pickle.load(pickle_in)
+
+def predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, model):
+    prediction = model.predict([[gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business]])[0]
+    return prediction
 
 def main():
-    st.title("Imon International's Bank scoring system")
-    classifier = load_model(model_selected)
-    if classifier is None:
-        return
+    st.title("Imon International's Bank Scoring System")
+    gender = st.radio('Ваш пол?(0 - мужской, 1 - женский)', (0, 1))
+    Issue_amount_nominal = st.number_input('Сумма выдачи номинал (только числа)', step=1, value=0)
+    Term = st.number_input('Срок кредита (только числа)', step=1, value=0) 
+    age = st.number_input('Возраст (только числа)', step=1, value=0)
+    Family_status = st.radio('Семейное положение (0 - вдовец/вдова, 1 - холост/не замужем, 2 - женат/замужем, 3 - разведен(а))', (0, 1, 2, 3))
+    Type_of_client = st.radio('Тип клиента (0 - старый клиент, 1 - новый клиент)', (0, 1))    
+    education = st.radio('Образование (0 - высшее, 1 - среднее специальное, 2 - среднее, 3 - неполное среднее, 4 - начальное, 5 - аспирантура)', (0, 1, 2, 3, 4, 5))
+    Tupe_of_business = st.radio('Вид бизнеса (0 - 1. Потребительский кредит, 1 - 2. Производство, 2 - 6. Сельское хозяйство, 3 - 3. Услуги, 4 - 4. Торговля)', (0, 1, 2, 3, 4)) 
     
-gender = st.radio('Ваш пол?(0 - male, 1 - female)', (0, 1))
-Issue_amount_nominal = st.number_input('Какова сумма выдочи номинала(используйте только цифры)?', step=1, value=0)
-Term = st.number_input('На какой срок вы хотите кредит?(используйте только цифры)?', step=1, value=0) 
-age = st.number_input('Сколько вам полных лет?(используйте только цифры)?', step=1, value=0)
-Family_status = st.radio('Каков ваш семеный статус?(0 - Widow/Widower, 1 - Single, 2 - Married, 3 - Divorced)', (0, 1, 2, 3))
-Type_of_client = st.radio('Какой вы клиент?(0 - Старый клиент, 1 - Новый клиент)', (0, 1))    
-education = st.radio('Какое у вас образование?(0 - Высшее образование, 1 - Сред.спец.образ-ние, 2 - Среднее образование, 3 - Непол Сред.образ, 4 - Начал образование, 5 - Аспирантура)', (0, 1, 2, 3, 4, 5))
-Tupe_of_business = st.radio('Какой у вас вид бизнеса?(0 - 1. Карзи истеъмоли/Потребительский кредит, 1 - 2. Истехсолот/Производство, 2 - 6. Хочагии кишлок / Сельское хозяйство, 3 - 3. Хизматрасони/Услуги, 4 - 4. Савдо / Торговля)', (0, 1, 2, 3, 4)) 
-             
-result = ""
-    if st.button("Predict"):
-        prediction = predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier)
-        if prediction is not None:
-            result = int(prediction[0])
-    
- st.success(f'Scoring system result is {result}')
+    if loaded_model:
+        prediction = predict_score(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, loaded_model)
+        if st.button("Предсказать"):
+            st.success(f'Результат скоринговой системы: {prediction}')
+    else:
+        st.warning("Выберите модель для загрузки.")
 
 if __name__ == '__main__':
     main()
