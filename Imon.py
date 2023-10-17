@@ -49,13 +49,12 @@ education = st.radio('Какое у вас образование?(0 - Высш�
 Tupe_of_business = st.radio('Какой у вас вид бизнеса?(0 - 1. Карзи истеъмоли/Потребительский кредит, 1 - 2. Истехсолот/Производство, 2 - 6. Хочагии кишлок / Сельское хозяйство, 3 - 3. Хизматрасони/Услуги, 4 - 4. Савдо / Торговля)', (0, 1, 2, 3, 4)) 
              
 result = ""
-if st.button("Predict"):
-    prediction = predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier)
-    if prediction is not None:
-        result = int(prediction[0])
-
-st.success(f'Scoring system result is {result}')
+    if st.button("Predict"):
+        prediction = predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Tupe_of_business, classifier)
+        if prediction is not None:
+            result = int(prediction[0])
+    
+ st.success(f'Scoring system result is {result}')
 
 if __name__ == '__main__':
     main()
-   
