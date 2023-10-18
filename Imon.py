@@ -36,9 +36,9 @@ def main():
         gender=1
     else:
         gender=0
-    Issue_amount_nominal = st.number_input('Какова сумма выдочи номинала(используйте только цифры)?', step=1, value=0)
-    Term = st.number_input('На какой срок вы хотите кредит?(используйте только цифры)?', step=1, value=0) 
-    age = st.number_input('Сколько вам полных лет?(используйте только цифры)?', step=1, value=0)
+    Issue_amount_nominal = st.number_input('Какова сумма выдачи номинала?', step=1, value=0)
+    Term = st.number_input('На какой срок вы хотите кредит?', step=1, value=0) 
+    age = st.number_input('Сколько вам полных лет?', step=1, value=0)
     family_status = st.radio('Каков ваш семеный статус?', ('Не женат/замужем', 'Разведен(-а)', 'Женат/Замужем', 'Вдова/Вдовец'))
     if  family_status == 'Не женат/замужем':
         Family_status = 0
