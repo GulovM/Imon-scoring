@@ -9,16 +9,16 @@ st.subheader('Imon International Bank Scoring')
 model_selected = st.radio('What analysis do you want to use', ('LogisticRegression', 'DecisionTreeClassifier', 'RandomForestClassifier(without options)',  'RandomForestClassifier(with options)', 'Default'))
 
 if model_selected == 'DecisionTreeClassifier':
-    pickle_in = open("ModelTree (1).pkl","rb")
+    pickle_in = open("ModelTree.pkl","rb")
     classifier=pickle.load(pickle_in)
 elif model_selected in ['LogisticRegression', 'Default']:
-    pickle_in = open("LogReg (1).pkl","rb")
+    pickle_in = open("LogReg.pkl","rb")
     classifier=pickle.load(pickle_in)
 elif model_selected == 'RandomForestClassifier(with options)':
-    pickle_in = open("Forest(par) (1).pkl","rb")
+    pickle_in = open("Forest(par).pkl","rb")
     classifier=pickle.load(pickle_in)
 elif model_selected == 'RandomForestClassifier(without options)':
-    pickle_in = open("Forest (1).pkl","rb")
+    pickle_in = open("Forest.pkl","rb")
     classifier=pickle.load(pickle_in)
 
                      
