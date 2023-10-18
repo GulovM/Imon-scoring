@@ -43,12 +43,11 @@ def main():
     result=""
     if st.button("Predict"):
         result=int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, Education, Tupe_of_business)) 
-     #st.success('The output is {}'.format(result))
-    st.success('Scoring system result is(1 - Длительность самой долгой единовременной просрочки в течение цикла > 15, 0 - Scoring system result is(1 - Длительность самой долгой единовременной просрочки в течение цикла <= 15) {}'.format(result))
-                     
-    
-              
-                  
+    if result == 0:
+        st.success('К сожалению мы не можем выдать вам кредит...(')
+    else:
+        st.success('Вы можете получить кредит!')
+                                      
 if __name__=='__main__':
     main()
 
