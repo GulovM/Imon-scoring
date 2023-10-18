@@ -31,22 +31,63 @@ def predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_
                      
 def main():
     st.title("Imon International's Bank scoring system")
-    gender = st.radio('Ваш пол?(0 - male, 1 - female)', (0, 1))
+    gend = st.radio('Ваш пол?', ('Мужчина', 'Женщина'))
+    if gend=='Мужчина':
+        gender=1
+    else:
+        gender=0
     Issue_amount_nominal = st.number_input('Какова сумма выдочи номинала(используйте только цифры)?', step=1, value=0)
     Term = st.number_input('На какой срок вы хотите кредит?(используйте только цифры)?', step=1, value=0) 
     age = st.number_input('Сколько вам полных лет?(используйте только цифры)?', step=1, value=0)
-    Family_status = st.radio('Каков ваш семеный статус?(0 - Widow/Widower, 1 - Single, 2 - Married, 3 - Divorced)', (0, 1, 2, 3))
+    family_status = st.radio('Каков ваш семеный статус?', ('Не женат/замужем', 'Разведен(-а)', 'Женат/Замужем', 'Вдова/Вдовец'))
+    if  family_status == 'Не женат/замужем':
+        Family_status = 0
+    elif  family_status == 'Разведен(-а)':
+        Family_status = 1
+    elif  family_status == 'Женат/Замужем':
+        Family_status = 2
+    else:
+        Family_status = 3
     Type_of_client = st.radio('Какой вы клиент?(0 - Старый клиент, 1 - Новый клиент)', (0, 1))    
-    education = st.radio('Какое у вас образование?(0 - Высшее образование, 1 - Сред.спец.образ-ние, 2 - Среднее образование, 3 - Непол Сред.образ, 4 - Начал образование, 5 - Аспирантура)', (0, 1, 2, 3, 4, 5))
-    Tupe_of_business = st.radio('Какой у вас вид бизнеса?(0 - 1. Карзи истеъмоли/Потребительский кредит, 1 - 2. Истехсолот/Производство, 2 - 6. Хочагии кишлок / Сельское хозяйство, 3 - 3. Хизматрасони/Услуги, 4 - 4. Савдо / Торговля)', (0, 1, 2, 3, 4)) 
-                     
+    ed = st.selectbox('Какое у вас образование?', ['Среднее образование', 'Высшее образование', 'Неполное Среднее образование',
+    'Среднее спец. образование', 'Аспирантура', 'Начальное образование'])
+    if ed=='Среднее образование':
+        education = 0
+    elif ed=='Высшее образование':
+         education = 1
+    elif ed=='Неполное Среднее образование':
+         education = 2
+    elif ed=='Среднее спец. образование':
+         education = 3
+    elif ed=='Аспирантура':
+         education = 4
+    else:
+         education = 5
+    Type = st.selectbox('Какой у вас вид бизнеса?', ['Хизматрасони/Услуги', 'Карзи истеъмоли/Потребительский кредит',
+ 'Савдо / Торговля', 'Истехсолот/Производство', 'Ипотека',
+ 'Чорводори / Животноводство', 'Хочагии кишлок / Сельское хозяйство']) 
+    if Type == 'Хизматрасони/Услуги':
+        Type_of_business = 0
+    elif Type == 'Карзи истеъмоли/Потребительский кредит':
+        Type_of_business = 1
+    elif Type == 'Савдо / Торговля':
+        Type_of_business = 2
+    elif Type == 'Истехсолот/Производство':
+        Type_of_business = 3
+    elif Type == 'Ипотека':
+        Type_of_business = 4 
+    elif Type == 'Чорводори / Животноводство':
+        Type_of_business = 5   
+    else:
+        Type_of_business = 0
+    
     result=""
     if st.button("Predict"):
-        result=int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, Education, Tupe_of_business)) 
-    if result == 0:
-        st.success('К сожалению мы не можем выдать вам кредит...(')
-    else:
-        st.success('Вы можете получить кредит!')
+        result=int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Type_of_business)) 
+        if result == 0:
+            st.success('К сожалению мы не можем выдать вам кредит...(')
+        else:
+            st.success('Вы можете получить кредит!')
                                       
 if __name__=='__main__':
     main()
