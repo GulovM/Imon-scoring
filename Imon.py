@@ -77,14 +77,14 @@ def main():
         Type_of_business = 5   
     else:
         Type_of_business = 0
-    
-result = ""
-if st.button("Predict"):
-    result = int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Type_of_business)) 
-    if result == 0:
-        st.success('К сожалению, мы не можем выдать вам кредит...')
-    else:
-        st.success('Вы можете получить кредит!')
-                                      
+        
+    result = ""
+    if st.button("Predict"):
+        result = int(predict_note_authentication(gender, Issue_amount_nominal, Term, age, Family_status, Type_of_client, education, Type_of_business)) 
+        if result == 0:
+            st.success('К сожалению, мы не можем выдать вам кредит...')
+        else:
+            st.success('Вы можете получить кредит!')
+                                          
 if __name__ == '__main__':
     main()
